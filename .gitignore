@@ -1,0 +1,12 @@
+node_modules/
+lib/
+*.js
+*.js.map
+
+.DS_Store
+*.swp
+*.log*
+*.iml
+.idea
+*.orig
+yarn.lock

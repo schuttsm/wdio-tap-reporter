@@ -1,0 +1,35 @@
+{
+  "name": "wdio-tap-reporter",
+  "version": "0.0.1",
+  "description": "A WebdriverIO plugin. Report results in 'tap' format",
+  "author": "Christian Bromann <christian@saucelabs.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:LKay/wdio-tap-reporter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LKay/wdio-tap-reporter/issues"
+  },
+  "keywords": [
+    "tap",
+    "reporter",
+    "webdriverio",
+    "wdio",
+    "wdio-plugin",
+    "wdio-reporter"
+  ],
+  "main": "lib/reporter.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.5",
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.1"
+  },
+  "dependencies": {
+    "tap": "^10.3.0"
+  },
+  "scripts": {}
+}
