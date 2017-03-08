@@ -1,0 +1,37 @@
+machine:
+  timezone:
+    Asia/Tokyo
+
+dependencies:
+  pre:
+    - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    - sudo apt-get update
+    - sudo apt-get install node yarn
+    - yarn global add coveralls
+
+  override:
+    - yarn
+
+  cache_directories:
+    - ~/.cache/yarn
+
+test:
+  override:
+    - yarn test
+
+  post:
+    - yarn run coverage
+
+compile:
+  pre:
+    - yarn run clean
+  override:
+    - yarn run build
+
+deployment:
+  production:
+    tag: /v[0-9]+(\.[0-9]+){2}/
+    owner: LKay
+    commands:
+      - echo -e "DEPLOY"

@@ -105,6 +105,35 @@ class TapReporter extends EventEmitter {
         })
     }
 
+    protected getTestPath (test: WDIOReporterTest): string {
+        if (test.uid === test.parentUid) {
+            return test.title
+        }
+
+        const parents: string[] = []
+        const path: string[] = [test.title]
+        let parentUid = test.parentUid
+
+        while (parentUid !== null) {
+            const parent: WDIOReporterSuite = this.suites.find((suite: WDIOReporterSuite) => suite.uid === parentUid)
+
+            if (parent) {
+                parents.push(parent.uid)
+                path.push(parent.title)
+                parentUid = parent.parentUid
+            } else {
+                parentUid = null
+            }
+
+            // To prevent infinite loop
+            if (parents.indexOf(parentUid) !== -1) {
+                parentUid = null
+            }
+        }
+
+        return path.reverse().join(" \u203A ")
+    }
+
     private onTestResult = (test: WDIOReporterTest) => {
         this.results.done++
 
@@ -151,35 +180,6 @@ class TapReporter extends EventEmitter {
         }
 
         TapReporter.out(lines.join(EOL))
-    }
-
-    protected getTestPath (test: WDIOReporterTest): string {
-        if (test.uid === test.parentUid) {
-            return test.title
-        }
-
-        const parents: string[] = []
-        const path: string[] = [test.title]
-        let parentUid = test.parentUid
-
-        while (parentUid !== null) {
-            const parent: WDIOReporterSuite = this.suites.find((suite: WDIOReporterSuite) => suite.uid === parentUid)
-
-            if (parent) {
-                parents.push(parent.uid)
-                path.push(parent.title)
-                parentUid = parent.parentUid
-            } else {
-                parentUid = null
-            }
-
-            // To prevent infinite loop
-            if (parents.indexOf(parentUid) !== -1) {
-                parentUid = null
-            }
-        }
-
-        return path.reverse().join(" \u203A ")
     }
 
 }
