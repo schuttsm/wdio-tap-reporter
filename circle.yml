@@ -27,7 +27,7 @@ test:
     - yarn test
 
   post:
-    - yarn run coverage
+    - if [ $CIRCLE_BRANCH = 'master' ]; then yarn run coverage; fi
 
 compile:
   pre:

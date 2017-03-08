@@ -3,7 +3,7 @@ WDIO Tap reporter
 
 [![CircleCI](https://circleci.com/gh/LKay/wdio-tap-reporter/tree/master.svg?style=shield)](https://circleci.com/gh/LKay/wdio-tap-reporter/tree/master) [![Coverage Status](https://coveralls.io/repos/github/LKay/wdio-tap-reporter/badge.svg)](https://coveralls.io/github/LKay/wdio-tap-reporter) [![devDependencies Status](https://david-dm.org/lkay/wdio-tap-reporter/dev-status.svg)](https://david-dm.org/lkay/wdio-tap-reporter?type=dev)
 
-> A WebdriverIO plugin to report in tap style. 
+> A WebdriverIO plugin to report in TAP format style. 
 > Output is based on specification for [TAP13](https://testanything.org/tap-version-13-specification.html) 
 
 
@@ -24,7 +24,7 @@ You can simple do it by:
 ```bash
 npm install wdio-tap-reporter --save-dev
 ```
-or if you are using [YARN](https://yarnpkg.com) (which I recomend):
+or if you are using [yarn](https://yarnpkg.com) (which I recommend):
 
 ```bash
 yarn add wdio-tap-reporter -D
