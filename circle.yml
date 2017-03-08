@@ -2,7 +2,7 @@ machine:
   timezone:
     Asia/Tokyo
   environment:
-    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+    PATH: "/usr/bin:${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
 
 
 dependencies:
@@ -12,8 +12,8 @@ dependencies:
     - curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
     - sudo apt-get update
     - sudo apt-get install -y nodejs yarn
-    - echo "node `node -v`"
-    - echo "yarn `yarn --version`"
+    - node -v
+    - yarn --version
     - yarn global add coveralls
 
   override:
