@@ -29,8 +29,6 @@
     "ava": "^0.18.2",
     "nyc": "^10.1.2",
     "rimraf": "^2.6.1",
-    "std-mocks": "^1.0.1",
-    "stdio-mock": "^1.1.0",
     "tap-nyan": "^1.1.0",
     "tslint": "^4.5.1",
     "typescript": "^2.2.1"
