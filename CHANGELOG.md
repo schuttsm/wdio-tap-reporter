@@ -12,4 +12,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - This CHANGELOG
 - Config file for CircleCI
 
-[Unreleased]: https://github.com/LKay/wdio-tap-reporter/compare/v0.0.1...HEAD
+## Compare
+- [Unreleased](https://github.com/LKay/wdio-tap-reporter/compare/v0.0.1...HEAD)
