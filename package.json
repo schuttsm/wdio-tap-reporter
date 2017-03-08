@@ -2,7 +2,7 @@
   "name": "wdio-tap-reporter",
   "version": "0.0.1",
   "description": "A WebdriverIO plugin. Report results in 'tap' format",
-  "author": "Christian Bromann <christian@saucelabs.com>",
+  "author": "Karol Janyst <lapkom@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -25,11 +25,27 @@
   },
   "devDependencies": {
     "@types/node": "^7.0.5",
+    "@types/webdriverio": "^4.5.2",
+    "ava": "^0.18.2",
+    "nyc": "^10.1.2",
+    "rimraf": "^2.6.1",
+    "std-mocks": "^1.0.1",
+    "stdio-mock": "^1.1.0",
+    "tap-nyan": "^1.1.0",
     "tslint": "^4.5.1",
     "typescript": "^2.2.1"
   },
-  "dependencies": {
-    "tap": "^10.3.0"
+  "dependencies": {},
+  "scripts": {
+    "clean": "rimraf lib coverage .nyc_output",
+    "lint": "tslint src/**/*.ts",
+    "ava": "tsc -p test/tsconfig.tests.json && nyc ava | tap-nyan",
+    "report": "nyc report --reporter=html"
   },
-  "scripts": {}
+  "ava": {
+    "files": [
+      "test/**/*.specs.js"
+    ],
+    "tap": true
+  }
 }
