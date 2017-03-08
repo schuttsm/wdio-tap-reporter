@@ -16,7 +16,6 @@ dependencies:
     - sudo apt-get install -y nodejs yarn
     - node -v
     - yarn --version
-    - yarn global add coveralls
 
   override:
     - yarn
