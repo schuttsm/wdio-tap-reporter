@@ -3,6 +3,8 @@ machine:
     Asia/Tokyo
   environment:
     PATH: "/usr/bin:${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+    COVERALLS_SERVICE_JOB_ID: "${CIRCLE_BUILD_NUM}"
+    COVERAGE_GIT_COMMIT: "${CIRLE_SHA1}"
 
 
 dependencies:
@@ -27,10 +29,7 @@ test:
     - yarn test
 
   post:
-    - if [ $CIRCLE_BRANCH = 'master' ]; then yarn run coverage; fi:
-      environment:
-        COVERALLS_SERVICE_JOB_ID: $CIRCLE_BUILD_NUM
-        COVERAGE_GIT_COMMIT: $CIRLE_SHA1
+    - if [ $CIRCLE_BRANCH = 'master' ]; then yarn run coverage; fi
 
 compile:
   pre:
