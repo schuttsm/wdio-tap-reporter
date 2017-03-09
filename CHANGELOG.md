@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 0.0.3 - 2017-03-09
 ### Added
 - `coveralls` as dev dependency
+- `files` section in `package.json` as built fiels were missing
+- `prepublish` script to make sure built files are present
 
 ### Removed
 - Installing `coveralls` globally in CI
@@ -26,5 +28,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Config file for CircleCI
 
 ## Compare
-- [Unreleased](https://github.com/LKay/wdio-tap-reporter/compare/v0.0.2...HEAD)
+- [Unreleased](https://github.com/LKay/wdio-tap-reporter/compare/v0.0.3...HEAD)
+- [0.0.3](https://github.com/LKay/wdio-tap-reporter/compare/v0.0.2...v0.0.3)
 - [0.0.2](https://github.com/LKay/wdio-tap-reporter/compare/v0.0.1...v0.0.2)
