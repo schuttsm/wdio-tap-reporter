@@ -40,7 +40,7 @@
   "scripts": {
     "clean": "rimraf lib coverage .nyc_output",
     "lint": "tslint src/**/*.ts",
-    "ava": "tsc -p test/tsconfig.tests.json && nyc ava",
+    "ava": "tsc -p test/tsconfig.tests.json && nyc ava | tap-nyan",
     "test": "npm run lint && npm run ava",
     "report": "nyc report --reporter=html",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
