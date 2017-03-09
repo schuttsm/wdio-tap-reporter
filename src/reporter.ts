@@ -4,8 +4,6 @@ import * as process from "process"
 
 // This interfaces are used only internally and don't reflect whole data shape
 
-type WDIOTestState = "pass" | "pending" | "fail"
-
 interface WDIOError {
     type?: string
     message?: string
@@ -13,6 +11,7 @@ interface WDIOError {
 }
 
 interface WDIOBase {
+    type: string
     event: string
     cid: string
     uid: string
@@ -25,16 +24,12 @@ interface WDIOResultBase extends WDIOBase {
     title: string
     pending: boolean
     file: string
-    start: number
-    end: number
-    duration: number
 }
 
 type WDIOReporterSuite = WDIOResultBase
 
 interface WDIOReporterTest extends WDIOResultBase {
-    state: WDIOTestState
-    error?: WDIOError
+    err?: WDIOError
 }
 
 interface Results {
@@ -75,7 +70,7 @@ class TapReporter extends EventEmitter {
         this.on("start", () => TapReporter.out("TAP version 13"))
         this.on("suite:start", (suite: WDIOReporterSuite) => this.suites.push(suite))
         this.on("test:start", () => this.results.tests++)
-        this.on("test:end", this.onTestResult)
+        this.on("test:pass", this.onTestResult)
         this.on("test:fail", this.onTestResult)
         this.on("test:pending", this.onTestResult)
 
@@ -86,19 +81,20 @@ class TapReporter extends EventEmitter {
                 skip,
                 tests
             } = this.results
-            const { start, end } = this.baseReporter.stats
+            const { _duration : duration } = this.baseReporter.stats
+            const total: number = tests + skip
 
-            if (tests === 0) {
+            if (total === 0) {
                 TapReporter.out("1..0 # SKIP No tests present")
             }
 
             const lines: string[] = [
-                `1..${tests}`,
-                `# tests ${tests}`,
+                `1..${total}`,
+                `# tests ${total}`,
                 `# pass ${pass}`,
                 `# skip ${skip}`,
                 `# fail ${fail}`,
-                `# Finished in ${end - start}ms`
+                `# Finished in ${duration}ms`
             ]
 
             TapReporter.out(lines.join(EOL))
@@ -138,13 +134,13 @@ class TapReporter extends EventEmitter {
         this.results.done++
 
         const testTitle: string = this.getTestPath(test)
-        const description: string = `# [Runner: ${test.cid}] ${testTitle} (${test.duration}ms)`
+        const description: string = `# [Runner: ${test.cid}] ${testTitle}`
         const lines: string[] = [description]
         const { done } = this.results
 
-        switch (test.state) {
-            case "pass":
-            case "pending":
+        switch (test.type) {
+            case "test:pass":
+            case "test:pending":
                 if (test.pending) {
                     this.results.skip++
                 } else {
@@ -155,9 +151,9 @@ class TapReporter extends EventEmitter {
                 lines.push(`ok ${done} - ${testTitle}${directive}`)
                 break
 
-            case "fail":
+            case "test:fail":
                 this.results.fail++
-                const error: WDIOError = test.error || {}
+                const error: WDIOError = test.err || {}
 
                 lines.push(`not ok ${done} - ${testTitle}`)
                 lines.push("# Diagnostics")
