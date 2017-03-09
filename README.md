@@ -6,6 +6,7 @@ WDIO Tap reporter
 > A WebdriverIO plugin to report in TAP format style. 
 > Output is based on specification for [TAP13](https://testanything.org/tap-version-13-specification.html) 
 
+![Tap Reporter](output.png "Tap Reporter")
 
 ## Installation
 
@@ -57,4 +58,4 @@ Simply pipe the output to reporter you want to use:
 wdio | tap-nyan
 ```
 
-
+![Nyancat](nyan.png "Nyancat")

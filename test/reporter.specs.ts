@@ -11,8 +11,7 @@ interface ReporterTestContext extends ContextualTestContext {
 
 const baseReporter: any = {
     stats : {
-        start : 0,
-        end   : 10
+        _duration : 10
     }
 }
 
@@ -27,17 +26,18 @@ function createSuite (event: string, num: number, parentUid?: string) {
     }
 }
 
-function createTest (event: string, num: number, state: string, parentUid?: string, error?: any) {
+function createTest (event: string, num: number, state: string, parentUid?: string, err?: any) {
     const name = `test ${num}`
     return {
+        type: event,
         event,
-        cid : "test",
+        cid: "test",
         uid: name,
         parentUid: parentUid || name,
         title: name,
         state,
         pending : state === "pending",
-        error,
+        err,
         duration: 10,
         file: "fake.specs.js"
     }
@@ -95,7 +95,7 @@ test("should output plan summary when no tests were run", (t: ReporterTestContex
 test("should output plan summary when tests were run", (t: ReporterTestContext) => {
     const { reporter } = t.context
 
-    reporter["results"].tests = 3
+    reporter["results"].tests = 2
     reporter["results"].pass = 1
     reporter["results"].skip = 1
     reporter["results"].fail = 1
@@ -149,7 +149,7 @@ test("should increment done tests counter if test finishes with any correct stat
 
     t.is(reporter["results"].done, 0)
 
-    reporter.emit("test:end", test1)
+    reporter.emit("test:pass", test1)
     reporter.emit("test:fail", test1)
     reporter.emit("test:pending", test1)
 
@@ -158,12 +158,13 @@ test("should increment done tests counter if test finishes with any correct stat
 
 test("should terminate tests when test has incorrect state", (t: ReporterTestContext) => {
     const { reporter } = t.context
-    const test1 = createTest("test:end", 1, "foo")
+    const event: string = "fake"
+    const test1 = createTest(event, 1, "foo")
 
-    reporter.emit("test:end", test1)
+    reporter.emit("test:pass", test1)
 
     const expect: string = [
-        "# [Runner: test] test 1 (10ms)",
+        "# [Runner: test] test 1",
         "Bail out! Test 1 has incorrect state and could not be processed",
     ].join(EOL)
 
@@ -173,14 +174,15 @@ test("should terminate tests when test has incorrect state", (t: ReporterTestCon
 
 test("should output chunk for passed test and increment passed counter", (t: ReporterTestContext) => {
     const { reporter } = t.context
-    const test1 = createTest("test:end", 1, "pass")
+    const event: string = "test:pass"
+    const test1 = createTest(event, 1, "pass")
 
     t.is(reporter["results"].pass, 0)
 
-    reporter.emit("test:end", test1)
+    reporter.emit(event, test1)
 
     const expect: string = [
-        "# [Runner: test] test 1 (10ms)",
+        "# [Runner: test] test 1",
         "ok 1 - test 1"
     ].join(EOL)
 
@@ -191,14 +193,15 @@ test("should output chunk for passed test and increment passed counter", (t: Rep
 
 test("should output chunk for skipped test and increment skipped counter", (t: ReporterTestContext) => {
     const { reporter } = t.context
-    const test1 = createTest("test:pending", 1, "pending")
+    const event: string = "test:pending"
+    const test1 = createTest(event, 1, "pending")
 
     t.is(reporter["results"].skip, 0)
 
-    reporter.emit("test:end", test1)
+    reporter.emit(event, test1)
 
     const expect: string = [
-        "# [Runner: test] test 1 (10ms)",
+        "# [Runner: test] test 1",
         "ok 1 - test 1 # SKIP Test skipped"
     ].join(EOL)
 
@@ -223,9 +226,9 @@ test("should output chunk for failed test end increment failed counter", (t: Rep
     reporter.emit("test:fail", test4)
 
     const [expect1, expect2, expect3, expect4] = [test1, test2, test3, test4].map((_test: any, i: number) => {
-        const error = _test.error || {}
+        const error = _test.err || {}
         return [
-            `# [Runner: test] ${_test.title} (10ms)`,
+            `# [Runner: test] ${_test.title}`,
             `not ok ${i + 1} - ${_test.title}`,
             "# Diagnostics",
             "  ---",
@@ -250,7 +253,7 @@ test("should output chunk for failed test end increment failed counter", (t: Rep
 test("should correctly output test nested in suites", (t: ReporterTestContext) => {
     const { reporter } = t.context
 
-    const event: string = "test:end"
+    const event: string = "test:pass"
     const suite1 = createSuite(event, 1)
     const suite2 = createSuite(event, 2, suite1.uid)
     const test1 = createTest(event, 1, "pass", suite2.uid)
@@ -262,12 +265,12 @@ test("should correctly output test nested in suites", (t: ReporterTestContext) =
     reporter.emit(event, test2)
 
     const expect1: string = [
-        "# [Runner: test] suite 1 › suite 2 › test 1 (10ms)",
+        "# [Runner: test] suite 1 › suite 2 › test 1",
         "ok 1 - suite 1 › suite 2 › test 1"
     ].join(EOL)
 
     const expect2: string = [
-        "# [Runner: test] test 2 (10ms)",
+        "# [Runner: test] test 2",
         "ok 2 - test 2"
     ].join(EOL)
 
