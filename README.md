@@ -15,7 +15,7 @@ The easiest way is to keep `wdio-tap-reporter` as a devDependency in your `packa
 ```json
 {
   "devDependencies": {
-    "wdio-tap-reporter": "~0.0.1"
+    "wdio-tap-reporter": "~0.0.4"
   }
 }
 ```
