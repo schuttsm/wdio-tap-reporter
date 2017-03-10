@@ -1,4 +1,4 @@
-WDIO Tap reporter
+WDIO TAP reporter
 ==================
 
 [![npm version](https://badge.fury.io/js/wdio-tap-reporter.svg)](https://badge.fury.io/js/wdio-tap-reporter) [![npm](https://img.shields.io/npm/dm/wdio-tap-reporter.svg)](https://www.npmjs.com/package/wdio-tap-reporter) [![CircleCI](https://circleci.com/gh/LKay/wdio-tap-reporter/tree/master.svg?style=shield)](https://circleci.com/gh/LKay/wdio-tap-reporter/tree/master) [![Coverage Status](https://coveralls.io/repos/github/LKay/wdio-tap-reporter/badge.svg)](https://coveralls.io/github/LKay/wdio-tap-reporter) [![devDependencies Status](https://david-dm.org/lkay/wdio-tap-reporter/dev-status.svg)](https://david-dm.org/lkay/wdio-tap-reporter?type=dev)
