@@ -46,3 +46,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - [0.0.4](https://github.com/LKay/wdio-tap-reporter/compare/v0.0.3...v0.0.4)
 - [0.0.3](https://github.com/LKay/wdio-tap-reporter/compare/v0.0.2...v0.0.3)
 - [0.0.2](https://github.com/LKay/wdio-tap-reporter/compare/v0.0.1...v0.0.2)
+- [0.0.1](https://github.com/LKay/wdio-tap-reporter/compare/5a6be1d...v0.0.1)
