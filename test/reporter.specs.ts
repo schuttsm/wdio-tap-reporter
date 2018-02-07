@@ -1,13 +1,13 @@
 import * as process from "process"
 import { EOL } from "os"
-import { test, ContextualTestContext } from "ava"
+import { test, TestContext, Context } from "ava"
 import TapReporter = require("../src/reporter")
 
-interface ReporterTestContext extends ContextualTestContext {
-    context: {
-        reporter?: TapReporter
-    }
+interface ReporterContext {
+    reporter?: TapReporter
 }
+
+type ReporterTestContext = TestContext & Context<ReporterContext>
 
 const baseReporter: any = {
     stats : {
@@ -22,7 +22,8 @@ function createSuite (event: string, num: number, parentUid?: string) {
         cid : "test",
         uid: name,
         parentUid: parentUid || name,
-        title: name
+        title: name,
+        parent: parentUid || name
     }
 }
 
@@ -35,6 +36,7 @@ function createTest (event: string, num: number, state: string, parentUid?: stri
         uid: name,
         parentUid: parentUid || name,
         title: name,
+        parent: parentUid || name,
         state,
         pending : state === "pending",
         err,
@@ -74,7 +76,7 @@ test.beforeEach((t: ReporterTestContext) => {
     StdoutStub.stub()
 })
 
-test.always.afterEach(() => {
+test.afterEach.always(() => {
     StdoutStub.restore()
 })
 
@@ -255,8 +257,8 @@ test("should correctly output test nested in suites", (t: ReporterTestContext) =
 
     const event: string = "test:pass"
     const suite1 = createSuite(event, 1)
-    const suite2 = createSuite(event, 2, suite1.uid)
-    const test1 = createTest(event, 1, "pass", suite2.uid)
+    const suite2 = createSuite(event, 2, suite1.title)
+    const test1 = createTest(event, 1, "pass", suite2.title)
     const test2 = createTest(event, 2, "pass", "fake")
 
     reporter.emit("suite:start", suite1)

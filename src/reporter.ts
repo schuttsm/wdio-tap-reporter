@@ -22,6 +22,7 @@ interface WDIOBase {
 
 interface WDIOResultBase extends WDIOBase {
     title: string
+    parent: string
     pending: boolean
     file: string
 }
@@ -42,7 +43,7 @@ interface Results {
 
 class TapReporter extends EventEmitter {
 
-    public static out (chunk: string): void {
+    public static out(chunk: string): void {
         process.stdout.write(chunk)
         process.stdout.write(EOL)
     }
@@ -53,7 +54,7 @@ class TapReporter extends EventEmitter {
     protected suites: WDIOReporterSuite[] = []
     protected results: Results
 
-    constructor (baseReporter: any, config: any, options?: any) {
+    constructor(baseReporter: any, config: any, options?: any) {
         super()
 
         this.baseReporter = baseReporter
@@ -101,33 +102,32 @@ class TapReporter extends EventEmitter {
         })
     }
 
-    protected getTestPath (test: WDIOReporterTest): string {
+    protected getTestPath(test: WDIOReporterTest): string {
         if (test.uid === test.parentUid) {
             return test.title
         }
 
         const parents: string[] = []
         const path: string[] = [test.title]
-        let parentUid = test.parentUid
 
-        while (parentUid !== null) {
-            const parent: WDIOReporterSuite = this.suites.find((suite: WDIOReporterSuite) => suite.uid === parentUid)
+        const suites: WDIOReporterSuite[] = this.suites.filter((suite: WDIOReporterSuite) => suite.cid === test.cid)
 
-            if (parent) {
-                parents.push(parent.uid)
-                path.push(parent.title)
-                parentUid = parent.parentUid
-            } else {
-                parentUid = null
-            }
+        let parent: WDIOReporterSuite = suites.find((suite: WDIOReporterSuite) => suite.uid === test.parentUid)
 
-            // To prevent infinite loop
-            if (parents.indexOf(parentUid) !== -1) {
-                parentUid = null
+        if (parent) {
+            path.push(parent.title)
+
+            while (parent.title !== parent.parent) {
+                parent = suites.find((suite: WDIOReporterSuite) => suite.title === parent.parent)
+
+                if (parent) {
+                    parents.push(parent.uid)
+                    path.push(parent.title)
+                }
             }
         }
 
-        return path.reverse().join(" \u203A ")
+        return path.slice().reverse().join(" \u203A ")
     }
 
     private onTestResult = (test: WDIOReporterTest) => {

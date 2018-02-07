@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 ### Added
 - Couple of new badges to README
+### Changed
+- Improved test title with nested suites
+- Circle CI config updated to 2.0
+- Update dependencies
 
 ## 0.0.4 - 2017-03-09
 ### Added

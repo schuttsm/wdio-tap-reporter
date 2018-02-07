@@ -1,0 +1,59 @@
+version: 2.0
+
+jobs:
+    build:
+        docker:
+            - image: node:8
+
+        environment:
+            COVERALLS_SERVICE_JOB_ID: $CIRCLE_BUILD_NUM
+            COVERALLS_GIT_COMMIT: $CIRLE_SHA1
+            COVERALLS_PARALLEL: true
+
+        steps:
+            - checkout
+            - run: echo $CIRCLE_SHA1 > .circle-sha
+            - run: echo "Install Dependencies"
+            - run: npm i
+            - run: echo "Run Tests"
+            - run: npm test
+            - run: if [ $CIRCLE_BRANCH = 'master' ]; then npm run coverage; fi
+            - run: echo "Build"
+            - run: npm run clean
+            - run: npm run build
+            - save_cache:
+                key: project-{{ checksum ".circle-sha" }}
+                paths:
+                    - ~/project
+
+    deploy:
+        docker:
+            - image: node:8
+
+        steps:
+            - run: echo $CIRCLE_SHA1 > .circle-sha
+            - restore_cache:
+                keys:
+                    - project-{{ checksum ".circle-sha" }}
+            - run:
+                command: |
+                    echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
+                    npm publish
+                    
+workflows:
+    version: 2
+
+    build_and_deploy:
+        jobs:
+            - build:
+                filters:
+                    tags:
+                        only: /.*/
+            - deploy:
+                requires:
+                    - build
+                filters:
+                    branches:
+                        ignore: /.*/
+                    tags:
+                        only: /v\d+(\.\d+){2}(-(alpha|beta)(\d+)?)?/
